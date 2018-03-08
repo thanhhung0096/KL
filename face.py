@@ -45,47 +45,60 @@ def extract_data_training():
             cv2.waitKey(1)
             cv2.destroyAllWindows()
     return faces,labels
+def draw_name(img,name,x,y):
+    cv2.putText(img, text, (x, y), cv2.FONT_HERSHEY_PLAIN, 1.5, (0, 255, 0), 2)
+
+def predict(face,gray,reconizer):
+    label,confidence =reconizer.predict(face)
+    (x,y,w,h) = face
+    text = "{},{}".format(Names[label],confidence)
+    draw_name(gray,text,x,y)
     
+if __name__ == "__main__":
+    
+    faces,labels = extract_data_training()
+    
+    recognizer = cv2.createLBPHFaceRecogizer()
+    recognizer.train(faces,np.array(labels))
+    
+    
+      
+    count = 1
+
+
+    camera = PiCamera()
+    camera.resolution = (480,320)
+    camera.brightness = 65
+    camera.framerate = 30
+    rawCapture = PiRGBArray(camera,size=(480,320))
+
+    time.sleep(0.1)
+
+
+    for frame in camera.capture_continuous(rawCapture, format="rgb",use_video_port=True):
         
-faces,labels = extract_data_training()
-
-print labels
-"""    
-count = 1
-
-
-camera = PiCamera()
-camera.resolution = (480,320)
-camera.brightness = 65
-camera.framerate = 30
-rawCapture = PiRGBArray(camera,size=(480,320))
-
-time.sleep(0.1)
-
-
-for frame in camera.capture_continuous(rawCapture, format="rgb",use_video_port=True):
-    
-    image = frame.array
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    rect,face = detect_face(gray)
-    if face is not None:
-        print "Face Detected "
-        draw_rectangle(face)
+        image = frame.array
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        rect,face = detect_face(gray)
+        if face is not None:
+            print "Face Detected "
+            draw_rectangle(face)
+            predict(face,gray,recognizer)
+            
+        cv2.imshow('video',gray)
+        key = cv2.waitKey(1) & 0xFF
+        rawCapture.truncate(0)
         
-    cv2.imshow('video',gray)
-    key = cv2.waitKey(1) & 0xFF
-    rawCapture.truncate(0)
-    
-    if key == ord("q"):
-        break
-    
-    elif key == ord("c"):
-        print "capturing picture"
-        name = "train data/s3/{}.png".format(count)
-        cv2.imwrite(name,gray)
-        count+=1
+        if key == ord("q"):
+            break
         
+        elif key == ord("c"):
+            print "capturing picture"
+            name = "train data/s3/{}.png".format(count)
+            cv2.imwrite(name,gray)
+            count+=1
+            
 
-cv2.destroyAllWindows()
-"""
+    cv2.destroyAllWindows()
+    
 
