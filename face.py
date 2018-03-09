@@ -32,7 +32,7 @@ def extract_data_training():
             cv2.imshow("Training on image...", image)
             cv2.waitKey(100)
             gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-            rect,face = detect_face(gray)
+            face,rect = detect_face(gray)
             if face is not None:
                 #save
                 path ="Faces/"+folder+"/"+img
@@ -57,12 +57,10 @@ def predict(face,gray,reconizer):
 if __name__ == "__main__":
     
     faces,labels = extract_data_training()
-    
-    recognizer = cv2.createLBPHFaceRecogizer()
-    recognizer.train(faces,np.array(labels))
-    
-    
-      
+##    print len(faces),len(labels)
+    recognizer = cv2.face.createLBPHFaceRecognizer()
+    recognizer.train(np.array(faces),np.array(labels))
+
     count = 1
 
 
@@ -100,5 +98,5 @@ if __name__ == "__main__":
             
 
     cv2.destroyAllWindows()
-    
+
 
