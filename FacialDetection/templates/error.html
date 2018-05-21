@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}
+    ERROR
+{% endblock %}
+
+{% block content %}
+    <h3>Sorry, this page does not exist!</h3>
+    <h6>Please go <a href="{% url 'index' %}">back</a> </h6>
+{% endblock %}

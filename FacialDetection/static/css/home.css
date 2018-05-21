@@ -1,0 +1,28 @@
+a.nav-link:hover {
+    color: #5ac0de!important;
+    background-color: white!important;
+}
+
+a.nav-link:active {
+    color:  #5ac0de;
+    background-color:  white;
+}
+
+.col-sm-4.user{
+    line-height: 58px;
+}
+
+.navbar-dark .navbar-nav.menu_bar .nav-link {
+    line-height: 43px;
+    padding: 7px 12px;
+}
+
+footer.py-1.bg-info {
+    position:  fixed;
+    width:  100%;
+    bottom:  0;
+}
+
+.container.mt-1 {
+    padding-top: 75px;
+}

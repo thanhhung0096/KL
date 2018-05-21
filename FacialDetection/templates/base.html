@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load staticfiles %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'vendor/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <script type="text/javascript" src="{% static 'vendor/bootstrap.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/home.js' %}"></script>
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+<nav class="navbar navbar-dark bg-info navbar-fixed-top">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-8">
+                <a href="{% url 'home' %}" class="navbar-brand"><img src="{% static 'images/logo.jpg' %}"
+                                                                      alt="None"></a>
+                <ul class="nav navbar-nav menu_bar">
+                    <li class="nav-item">
+                        <a href="/" class="nav-link">Home<span class="span sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'about' %}" class="nav-link">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'blogs' %}" class="nav-link">Blog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'streaming' %}" class="nav-link">Streaming</a>
+                    </li>
+                </ul>
+            </div>
+
+            {% if user.is_authenticated %}
+                <div class="col-sm-4">
+                    <div class=" container-fluid " align="right">
+                        <small>Welcome {{ user.username }}
+                        </small>
+                        <br>
+                        <!-- Example single danger button -->
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-success btn-sm dropdown-toggle"
+                                    data-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false">
+                                Account
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item" href="{% url 'new_post' %}">Create Post</a>
+                                <a class="dropdown-item" href="#">Your Posts</a>
+                                <a class="dropdown-item" href="{% url 'change_password' %}">Change Password</a>
+                                <a class="dropdown-item" href="{% url 'get_data' %}">Data</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{% url 'logout' %}">Log out</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-sm-4 user">
+                    <div class="container-fluid" align="right">
+                        <a href="{% url 'signup' %}" role="button" class="btn btn-success ">Sign up</a>
+                        <a href="{% url 'login' %}" role="button" class="btn btn-primary ">Log in</a>
+                    </div>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+</nav>
+<div class="container mt-1">
+    <div class="row">
+        {% include 'message.html' %}
+        {% block content %}
+        {% endblock %}
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="py-1 bg-info">
+    <div class="container footer" align="center">
+        <p class="m-0 text-white text-center">Copyright &copy; Eddy1o2</p>
+    </div>
+    <!-- /.container -->
+</footer>
+
+</body>
+</html>

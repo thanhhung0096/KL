@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block content %}
+    {% load staticfiles %}
+    <div class="col-sm-8">
+        <img src="{% static 'images/panel.jpg' %}" alt="None" class="img-fluid">
+    </div>
+    <div class="col-sm-4 content">
+        <h2>Facial Recognition System Demo</h2>
+        <p>Face recognition is an exciting field of computer vision with many possible applications to hardware and
+            devices. Using embedded platforms like the Raspberry Pi and open source computer vision libraries like
+            OpenCV, you can now try a demo for this project!</p>
+        <a href="{% url 'resource' %}" class="btn btn-primary btn-lg">Try now!</a>
+    </div>
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% load widget_tweaks %}
+
+{% block title %}
+    Resource
+{% endblock %}
+
+{% block content %}
+    {% load staticfiles %}
+    {% csrf_token %}
+    <article class="mb-3">
+        <style scoped>
+            video {
+                transform: scaleX(-1);
+            }
+
+            p {
+                text-align: center;
+            }
+        </style>
+        <h1>Facial Recognition</h1>
+        <section id="splash">
+            <p id="errorMessage">Loading...</p>
+        </section>
+        <section id="app" hidden>
+            <p>
+                <video id="monitor" autoplay></video>
+                <canvas id="photo"></canvas>
+            <p><input type=button value="&#x1F4F7;" onclick="snapshot()">
+            <p><input type="button" value="Save" onclick="save_img()">
+        </section>
+        <script>
+            var video = document.getElementById('monitor');
+            var canvas = document.getElementById('photo');
+            var csrftoken = getCookie('csrftoken');
+
+            navigator.mediaDevices.getUserMedia({
+                video: true
+            }).then(function (stream) {
+                video.srcObject = stream;
+                video.onloadedmetadata = function () {
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    document.getElementById('splash').hidden = true;
+                    document.getElementById('app').hidden = false;
+                };
+            }).catch(function (reason) {
+                document.getElementById('errorMessage').textContent = reason;
+            });
+
+            //Take a snapshot video
+            function snapshot() {
+                canvas.getContext('2d').drawImage(video, 0, 0);
+            }
+
+            //Save image to server
+            function save_img() {
+                var img = canvas.toDataURL('img/png');
+                $.ajax({
+                    url: '{% url "save_img" %}',
+                    type: "POST",
+                    data: {
+                        imgBase64: img,
+                        csrfmiddlewaretoken : csrftoken
+                    },
+                    success: function (data) {
+                        alert("saved");
+                    }
+                });
+            }
+
+            //For getting CSRF token
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie != '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = jQuery.trim(cookies[i]);
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+        </script>
+    </article>
+
+{% endblock %}
