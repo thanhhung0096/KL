@@ -13,7 +13,10 @@ from django.views.generic import ListView, DetailView
 from .forms import NewPostForm
 
 from .models import Post
-
+import cv2
+from picamera import PiCamera
+from picamera.array import PiRGBArray
+import time
 
 # Create your views here.
 
@@ -43,19 +46,25 @@ def about(request):
 
 
 def stream():
-    cap = cv2.VideoCapture(0)
+    with PiCamera() as camera:
+        camera.resolution = (640,480)
+        camera.brightness = 65
+        camera.framerate = 30
+        rawCapture = PiRGBArray(camera,size=(640,480))
+        
+        time.sleep(0.1)
 
-    while True:
-        ret, frame = cap.read()
-
-        if not ret:
-            print("Error: failed to capture image")
-            break
-
-        cv2.imwrite('static/images/img_demo.jpg', frame)
-        yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' +
-               open('static/images/img_demo.jpg', 'rb').read() + b'\r\n')
+        
+        for frame in camera.capture_continuous(rawCapture, format="bgr",use_video_port=True):
+        
+            image = frame.array
+            gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+            rawCapture.truncate(0)
+            cv2.imwrite('/home/pi/KL/FacialDetection/static/images/img_demo.jpg', gray)
+            
+            yield (b'--frame\r\n'
+                b'Content-Type: image/jpeg\r\n\r\n' +
+               open('/home/pi/KL/FacialDetection/static/images/img_demo.jpg', 'rb').read() + b'\r\n')
 
 
 def video_feed(request):

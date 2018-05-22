@@ -7,7 +7,7 @@ class LBPH():
         self.image = image
         self.P = P
         self.R = R
-
+        self.HIST = None
     def create_LBP(self):
         return local_binary_pattern(self.image,self.P,self.R,method="uniform")
 
@@ -18,7 +18,7 @@ class LBPH():
                 images.append(image[r:r + 20, c:c + 20])
         return images
     def create_MB_LBPH(self):
-        t =  time.time()
+##        t =  time.time()
         image = cv2.resize(self.image, (200, 200))
         eps = 1e-9
         image_blocks = self.divide_image(image)
@@ -30,6 +30,36 @@ class LBPH():
             HIST = np.concatenate((HIST, hist), axis=0)
         HIST = HIST.astype("float32")
         HIST /= (HIST.sum() + eps)
-        print "Time for extract MB_LBPH: " , (time.time() - t)
+##        print "Time for extract MB_LBPH: " , (time.time() - t)
+        self.HIST = HIST
         return HIST
 
+    def findClosest(self, hists):
+##        print self.HIST
+        minDis = 1000
+        pos = 0
+        for index ,hist in enumerate (hists):
+            dis = cv2.compareHist(self.HIST, hist,method=cv2.HISTCMP_CHISQR) *100
+##            print dis
+            if dis < minDis:
+                minDis = dis
+                pos = index
+                
+        return minDis,pos
+            
+            
+            
+            
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        

@@ -4,6 +4,7 @@ from picamera.array import PiRGBArray
 from picamera import PiCamera
 import time
 import os
+from lbph import LBPH
 #function
 face_cascade_path = "lbpcascade_frontalface.xml"
 
@@ -41,72 +42,19 @@ def extract_data_training():
 ##                print type(face)
                 labels.append(label)
                 faces.append(face)
-            cv2.destroyAllWindows()
-            cv2.waitKey(1)
-            cv2.destroyAllWindows()
-    return faces,labels
-def draw_name(img,text,x,y):
-    cv2.putText(img, text, (x, y), cv2.FONT_HERSHEY_PLAIN, 1.5, (0, 255, 0), 2)
-
-def predict(face,rect,gray,reconizer):
-    label,confidence =reconizer.predict(face)
-    (x,y,w,h) = rect
-    if confidence < 70:
         
-        print "Recognition: {}, confidence: {}".format(Names[label],confidence)
-        text = "{},{}".format(Names[label],confidence)
-##    text = Names[label]
-        draw_name(gray,text,x,y)
-    else:
-        print "Unknow people!!!"
-        text = "unknow"
-        draw_name(gray,text,x,y)
+    return faces,labels
     
     
 if __name__ == "__main__":
-    
+    t = time.time()
     faces,labels = extract_data_training()
-##    print len(faces),len(labels)
-    recognizer = cv2.face.createLBPHFaceRecognizer()
-    recognizer.train(np.array(faces),np.array(labels))
-    recognizer.save("trained/trained.yml")
-"""
-    count = 13
-
-
-    camera = PiCamera()
-    camera.resolution = (480,320)
-    camera.brightness = 65
-    camera.framerate = 30
-    rawCapture = PiRGBArray(camera,size=(480,320))
-
-    time.sleep(0.1)
-
-
-    for frame in camera.capture_continuous(rawCapture, format="rgb",use_video_port=True):
-        
-        image = frame.array
-        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        face,rect = detect_face(gray)
-        if face is not None:
-            print "Face Detected "
-            draw_rectangle(rect)
-            predict(face,rect,gray,recognizer)
-            
-        cv2.imshow('video',gray)
-        key = cv2.waitKey(1) & 0xFF
-        rawCapture.truncate(0)
-        
-        if key == ord("q"):
-            break
-        
-        elif key == ord("c"):
-            print "capturing picture"
-            name = "train data/s3/{}.png".format(count)
-            cv2.imwrite(name,gray)
-            count+=1
-            
-
-    cv2.destroyAllWindows()
-
-"""
+    hists =[]
+    for face in faces:
+        lbph = LBPH(face,8,1)
+        hists.append(lbph.create_MB_LBPH())
+    
+    np.savez("trained/trained.npz" , hists = hists, labels = labels)
+    print "Training completed"
+    print "Total time: " ,(time.time() - t) 
+    

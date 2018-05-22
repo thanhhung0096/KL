@@ -4,9 +4,10 @@ from picamera.array import PiRGBArray
 from picamera import PiCamera
 import time
 import os
+from lbph import LBPH
 #function
 face_cascade_path = "lbpcascade_frontalface.xml"
-Names=["","s1","s2","Hung"]
+Names=[""]
 def detect_face(gray):
     face_cascde = cv2.CascadeClassifier(face_cascade_path)
     faces = face_cascde.detectMultiScale(gray, scaleFactor=1.2,minNeighbors=5)
@@ -18,40 +19,19 @@ def detect_face(gray):
 def draw_rectangle(rect):
     (x,y,w,h) =  rect
     cv2.rectangle(gray,(x,y),(x+w,y+h),(255,0,0),2)
-def extract_data_training():
-    faces = []
-    labels=[]
-    folders =  os.listdir('train data')
-    for folder in folders:
-        label = int(folder.replace("s",""))
-        images = os.listdir("train data/" + folder)
-        for img in images:
-            path = "train data/"+folder+"/"+img
-            image = cv2.imread(path)
-##            print type(image)
-            cv2.imshow("Training on image...", image)
-            cv2.waitKey(100)
-            gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-            face,rect = detect_face(gray)
-            if face is not None:
-                #save
-                path ="Faces/"+folder+"/"+img
-                print "save face to "+path
-                cv2.imwrite(path,face)
-##                print type(face)
-                labels.append(label)
-                faces.append(face)
-            cv2.destroyAllWindows()
-            cv2.waitKey(1)
-            cv2.destroyAllWindows()
-    return faces,labels
+
 def draw_name(img,text,x,y):
     cv2.putText(img, text, (x, y), cv2.FONT_HERSHEY_PLAIN, 1.5, (0, 255, 0), 2)
 
-def predict(face,rect,gray,reconizer):
-    label,confidence =reconizer.predict(face)
+def predict(face,rect,gray):
+    lbph = LBPH(face,8,1)
+    _ = lbph.create_MB_LBPH()
+    confidence , pos = lbph.findClosest(hists)
+    label = labels[pos]
+    
+##    label,confidence =reconizer.predict(face)
     (x,y,w,h) = rect
-    if confidence < 70:
+    if confidence < 500:
         
         print "Recognition: {}, confidence: {}".format(Names[label],confidence)
         text = "{},{}".format(Names[label],confidence)
@@ -62,16 +42,24 @@ def predict(face,rect,gray,reconizer):
         text = "unknow"
         draw_name(gray,text,x,y)
     
-    
+##count = 25
 if __name__ == "__main__":
     
-##    faces,labels = extract_data_training()
-####    print len(faces),len(labels)
-    recognizer = cv2.face.createLBPHFaceRecognizer()
-##    recognizer.train(np.array(faces),np.array(labels))
-##    recognizer.save("trained/trained.yml")
+    file = open("user","r")
+    content = file.read();
+    for name in content.split(","):
+        Names.append(name)
+    print "Users: " , Names[1:]
+    
+    trained = np.load("trained/trained.npz")
+    hists = trained['hists']
+    labels = trained['labels']
+    print "Loaded train data."
+    
+    
+    #recognizer = cv2.face.createLBPHFaceRecognizer()
 
-    recognizer.load("trained/trained.yml")
+    #recognizer.load("trained/trained.yml")
 
 
     camera = PiCamera()
@@ -91,7 +79,7 @@ if __name__ == "__main__":
         if face is not None:
             print "Face Detected "
             draw_rectangle(rect)
-            predict(face,rect,gray,recognizer)
+            predict(face,rect,gray)
             
         cv2.imshow('video',gray)
         key = cv2.waitKey(1) & 0xFF
