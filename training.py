@@ -5,8 +5,10 @@ from picamera import PiCamera
 import time
 import os
 from lbph import LBPH
+import shutil
 #function
 face_cascade_path = "lbpcascade_frontalface.xml"
+path_to_train_data = "train data"
 
 def detect_face(gray):
     face_cascde = cv2.CascadeClassifier(face_cascade_path)
@@ -22,12 +24,20 @@ def draw_rectangle(rect):
 def extract_data_training():
     faces = []
     labels=[]
-    folders =  os.listdir('train data')
+    folders =  os.listdir(path_to_train_data)
+    User = ""
+    label =0
     for folder in folders:
-        label = int(folder.replace("s",""))
-        images = os.listdir("train data/" + folder)
+        label +=1
+        print label,folder
+        User += " "  + folder
+        face_folder_path = "Faces/" + folder
+        if not os.path.exists(face_folder_path):
+            os.makedirs(face_folder_path)
+##        label = int(folder.replace("s",""))
+        images = os.listdir( path_to_train_data+"/" + folder)
         for img in images:
-            path = "train data/"+folder+"/"+img
+            path = path_to_train_data+"/"+folder+"/"+img
             image = cv2.imread(path)
 ##            print type(image)
 ##            cv2.imshow("Training on image...", image)
@@ -42,18 +52,24 @@ def extract_data_training():
 ##                print type(face)
                 labels.append(label)
                 faces.append(face)
-        
+            else:
+                os.remove(path)
+                print "removed "  + path
+    with open("user","w") as f:
+        f.write(User)
     return faces,labels
     
     
 if __name__ == "__main__":
     t = time.time()
+    shutil.rmtree("Faces")
     faces,labels = extract_data_training()
+    print labels
     hists =[]
     for face in faces:
         lbph = LBPH(face,8,1)
-        hists.append(lbph.create_MB_LBPH())
-    
+        hists.append(lbph.create_MB_LBPH_2())
+##    print hists[0].shape
     np.savez("trained/trained.npz" , hists = hists, labels = labels)
     print "Training completed"
     print "Total time: " ,(time.time() - t) 

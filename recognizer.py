@@ -24,14 +24,15 @@ def draw_name(img,text,x,y):
     cv2.putText(img, text, (x, y), cv2.FONT_HERSHEY_PLAIN, 1.5, (0, 255, 0), 2)
 
 def predict(face,rect,gray):
+    cv2.imwrite("a/aa.png",face)
     lbph = LBPH(face,8,1)
-    _ = lbph.create_MB_LBPH()
-    confidence , pos = lbph.findClosest(hists)
+    _ = lbph.create_MB_LBPH_2()
+    confidence , pos,_ = lbph.findClosest(hists)
     label = labels[pos]
     
 ##    label,confidence =reconizer.predict(face)
     (x,y,w,h) = rect
-    if confidence < 500:
+    if confidence < 200:
         
         print "Recognition: {}, confidence: {}".format(Names[label],confidence)
         text = "{},{}".format(Names[label],confidence)
@@ -42,13 +43,13 @@ def predict(face,rect,gray):
         text = "unknow"
         draw_name(gray,text,x,y)
     
-##count = 25
+count = 0
 if __name__ == "__main__":
     
     file = open("user","r")
     content = file.read();
-    for name in content.split(","):
-        Names.append(name)
+    for i in range(1,len(content.split(" "))):
+        Names.append(content.split(" ")[i])
     print "Users: " , Names[1:]
     
     trained = np.load("trained/trained.npz")
@@ -90,9 +91,10 @@ if __name__ == "__main__":
         
         elif key == ord("c"):
             print "capturing picture"
-            name = "train data/s3/{}.png".format(count)
+            name = "train data/Hung/" + time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()) + ".png"
+            print name, type(name)
             cv2.imwrite(name,gray)
-            count+=1
+            
             
 
     cv2.destroyAllWindows()
