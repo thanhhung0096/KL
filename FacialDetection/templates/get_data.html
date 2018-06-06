@@ -9,25 +9,32 @@
 {% block content %}
     {% load staticfiles %}
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/get_data.css' %}">
     <!-- Page Content -->
-    <div class="container mb-3">
+    <div class="container mb-3 pb-2">
 
-      <h1 class="my-4 text-center text-lg-left">Data to train AI</h1>
+        <h1 class="my-4 text-center text-lg-left">Data to train AI
+            <a href="{% url 'send_message' %}" class="btn btn-outline-danger">Train now!</a></h1>
 
-      <div class="row text-center text-lg-left mt-2">
-        {% for image in images %}
-            <div class="col-lg-3 col-md-4 col-xs-6">
-          <a href="{% get_media_prefix %}data/{{ user.username }}/{{ image }}" class="d-block mb-4 h-100">
-            <img class="img-fluid img-thumbnail"
-                 src="/media/data/{{ user.username }}/{{ image }}" alt="None">
-          </a>
+        <div class="row text-center text-lg-left mt-2">
+            {% if not images %}
+                <div class="col-sm-12">
+                    <p>Your data is empty. </p>
+                </div>
+                <a href="{% url 'resource' %}" class="btn btn-info" style="margin-left: 15px" role="button">
+                    Click here to create data &rarr;</a>
+            {% else %}
+
+                {% for image in images %}
+                    <div class="col-lg-3 col-md-4 col-xs-6" style="padding-bottom: 30px">
+                        <a href="{% get_media_prefix %}data/{{ user.username }}/{{ image }}" class="d-block mb-4 h-100">
+                            <img class="img-fluid img-thumbnail"
+                                 src="/media/data/{{ user.username }}/{{ image }}" alt="None">
+                        </a>
+                    </div>
+                {% endfor %}
+
+            {% endif %}
         </div>
-        {% endfor %}
-
-
-      </div>
-
     </div>
 
 {% endblock %}

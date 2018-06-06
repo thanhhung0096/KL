@@ -35,6 +35,10 @@ urlpatterns = [
     url(r'^data/$', views.get_data, name='get_data'),
     url(r'^resource/$', views.resource, name='resource'),
     url(r'^save_img/$', views.save_img, name='save_img'),
+    url(r'^own_blogs/$', views.OwnPostView.as_view(), name='own_blogs'),
+    url(r'^blogs/(?P<pk>\d+)/edit/$', views.PostUpdateView.as_view(), name='edit_post'),
+    url(r'^blogs/(?P<pk>\d+)/delete/$', views.PostDeleteView.as_view(), name='delete_post'),
+    url(r'^send_message/$', views.send_message, name='send_message'),
 
     url(r'^signup/$', accounts_views.signup, name='signup'),
     url(r'^logout/$', auth_views.LogoutView.as_view(), name='logout'),

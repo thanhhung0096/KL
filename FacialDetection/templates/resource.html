@@ -19,16 +19,17 @@
                 text-align: center;
             }
         </style>
-        <h1>Facial Recognition</h1>
+        <h1>Take pictures to create data</h1>
         <section id="splash">
             <p id="errorMessage">Loading...</p>
         </section>
         <section id="app" hidden>
+            <p><input type=button class="btn-lg" value="  &#x1F4F7;  " onclick="snapshot()">
+                <input type="button" class="btn-primary btn-lg" value="Save" onclick="save_img()">
             <p>
                 <video id="monitor" autoplay></video>
                 <canvas id="photo"></canvas>
-            <p><input type=button value="&#x1F4F7;" onclick="snapshot()">
-            <p><input type="button" value="Save" onclick="save_img()">
+
         </section>
         <script>
             var video = document.getElementById('monitor');
@@ -62,7 +63,7 @@
                     type: "POST",
                     data: {
                         imgBase64: img,
-                        csrfmiddlewaretoken : csrftoken
+                        csrfmiddlewaretoken: csrftoken
                     },
                     success: function (data) {
                         alert("saved");
@@ -86,6 +87,7 @@
                 }
                 return cookieValue;
             }
+
         </script>
     </article>
 

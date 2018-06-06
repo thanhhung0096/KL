@@ -5,12 +5,6 @@
 {% endblock %}
 
 {% block content %}
-    {#    <h3><a href="{% url 'post' post.id %}">{{ post.title }}</a></h3>#}
-    {#    <h6>on {{ post.date }}</h6>#}
-    {#    {{ post.body|safe|linebreaks }}#}
-    {#    {% if post.image != None %}#}
-    {#        <img src="{{ post.image.url }}">#}
-    {#    {% endif %}#}
     {% load staticfiles %}
     <link rel="stylesheet" href="{% static 'css/blog.css' %}">
     <div class="container mb-3">

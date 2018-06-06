@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{% static 'vendor/bootstrap.css' %}">
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
     <script type="text/javascript" src="{% static 'vendor/bootstrap.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/home.js' %}"></script>
     <title>{% block title %}{% endblock %}</title>
@@ -14,7 +15,7 @@
 <nav class="navbar navbar-dark bg-info navbar-fixed-top">
     <div class="container">
         <div class="row">
-            <div class="col-sm-8">
+            <div class="col-sm-8 col-xs-8">
                 <a href="{% url 'home' %}" class="navbar-brand"><img src="{% static 'images/logo.jpg' %}"
                                                                       alt="None"></a>
                 <ul class="nav navbar-nav menu_bar">
@@ -34,7 +35,7 @@
             </div>
 
             {% if user.is_authenticated %}
-                <div class="col-sm-4">
+                <div class="col-sm-4 col-xs-2">
                     <div class=" container-fluid " align="right">
                         <small>Welcome {{ user.username }}
                         </small>
@@ -48,7 +49,7 @@
                             </button>
                             <div class="dropdown-menu dropdown-menu-right">
                                 <a class="dropdown-item" href="{% url 'new_post' %}">Create Post</a>
-                                <a class="dropdown-item" href="#">Your Posts</a>
+                                <a class="dropdown-item" href="{% url 'own_blogs' %}">Your Posts</a>
                                 <a class="dropdown-item" href="{% url 'change_password' %}">Change Password</a>
                                 <a class="dropdown-item" href="{% url 'get_data' %}">Data</a>
                                 <div class="dropdown-divider"></div>
@@ -58,7 +59,7 @@
                     </div>
                 </div>
             {% else %}
-                <div class="col-sm-4 user">
+                <div class="col-sm-4 col-xs-2 user">
                     <div class="container-fluid" align="right">
                         <a href="{% url 'signup' %}" role="button" class="btn btn-success ">Sign up</a>
                         <a href="{% url 'login' %}" role="button" class="btn btn-primary ">Log in</a>
@@ -70,8 +71,8 @@
     </div>
 </nav>
 <div class="container mt-1">
+    {% include 'message.html' %}
     <div class="row">
-        {% include 'message.html' %}
         {% block content %}
         {% endblock %}
     </div>
