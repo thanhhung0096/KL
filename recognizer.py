@@ -25,7 +25,7 @@ def draw_name(img,text,x,y):
 
 def predict(face,rect,gray):
     cv2.imwrite("a/aa.png",face)
-    lbph = LBPH(face,8,1)
+    lbph = LBPH(face,8,2)
     _ = lbph.create_MB_LBPH_2()
     confidence , pos,_ = lbph.findClosest(hists)
     label = labels[pos]
@@ -33,7 +33,7 @@ def predict(face,rect,gray):
 ##    label,confidence =reconizer.predict(face)
     (x,y,w,h) = rect
     if confidence < 200:
-        
+        print label
         print "Recognition: {}, confidence: {}".format(Names[label],confidence)
         text = "{},{}".format(Names[label],confidence)
 ##    text = Names[label]
@@ -65,7 +65,7 @@ if __name__ == "__main__":
 
     camera = PiCamera()
     camera.resolution = (480,320)
-    camera.brightness = 65
+    camera.brightness = 60
     camera.framerate = 30
     rawCapture = PiRGBArray(camera,size=(480,320))
 

@@ -1,3 +1,4 @@
+#!/bin/sh
 import numpy as np
 import cv2
 from picamera.array import PiRGBArray
@@ -7,10 +8,11 @@ import os
 from lbph import LBPH
 import shutil
 #function
-face_cascade_path = "lbpcascade_frontalface.xml"
-path_to_train_data = "train data"
+
+
 
 def detect_face(gray):
+    face_cascade_path = "lbpcascade_frontalface.xml"
     face_cascde = cv2.CascadeClassifier(face_cascade_path)
     faces = face_cascde.detectMultiScale(gray, scaleFactor=1.2,minNeighbors=5)
     if (len(faces) ==0):
@@ -22,6 +24,8 @@ def draw_rectangle(rect):
     (x,y,w,h) =  rect
     cv2.rectangle(gray,(x,y),(x+w,y+h),(255,0,0),2)
 def extract_data_training():
+    
+    path_to_train_data = "media/data"
     faces = []
     labels=[]
     folders =  os.listdir(path_to_train_data)
@@ -29,7 +33,7 @@ def extract_data_training():
     label =0
     for folder in folders:
         label +=1
-        print label,folder
+        print (label,folder)
         User += " "  + folder
         face_folder_path = "Faces/" + folder
         if not os.path.exists(face_folder_path):
@@ -47,30 +51,35 @@ def extract_data_training():
             if face is not None:
                 #save
                 path ="Faces/"+folder+"/"+img
-                print "save face to "+path
+                print ("save face to "+path)
                 cv2.imwrite(path,face)
 ##                print type(face)
                 labels.append(label)
                 faces.append(face)
             else:
                 os.remove(path)
-                print "removed "  + path
+                print ("removed "  + path)
     with open("user","w") as f:
         f.write(User)
     return faces,labels
     
     
-if __name__ == "__main__":
+def main():
     t = time.time()
-    shutil.rmtree("Faces")
+    try:
+        shutil.rmtree("Faces")
+    except:
+        os.mkdir("Faces")
     faces,labels = extract_data_training()
-    print labels
+
     hists =[]
     for face in faces:
-        lbph = LBPH(face,8,1)
+        lbph = LBPH(face,8,2)
         hists.append(lbph.create_MB_LBPH_2())
-##    print hists[0].shape
-    np.savez("trained/trained.npz" , hists = hists, labels = labels)
-    print "Training completed"
-    print "Total time: " ,(time.time() - t) 
+    ##    print hists[0].shape
     
+    np.savez("trained/trained.npz" , hists = hists, labels = labels)
+    print ("Training completed")
+    print ("Total time: " ,(time.time() - t) )
+
+main()
