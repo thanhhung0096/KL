@@ -88,7 +88,10 @@ def initRecognizer():
     hists = trained['hists']
     labels = trained['labels']
     return hists,labels,Names
+
 def stream():
+    
+    from recognizer import detect_face, draw_name,draw_rectangle,predict
     hists,labels,Names = initRecognizer()
     with PiCamera() as camera:
         camera.resolution = (640,480)
@@ -103,6 +106,11 @@ def stream():
         
             image = frame.array
             gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+            face,rect = detect_face(gray)
+            if face is not None:
+                print( "Face Detected ")
+                gray = draw_rectangle(rect,gray)
+                predict(face,rect,gray,hists,labels,Names)
             rawCapture.truncate(0)
             cv2.imwrite('/home/pi/KL/FacialDetection/static/images/img_demo.jpg', gray)
             

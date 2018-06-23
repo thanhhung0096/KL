@@ -42,7 +42,7 @@ class LBPH():
         lbp_blocks = self.divide_image(lbp_image)
         HIST = np.empty((0))
         for block in lbp_blocks:
-            # print block
+            # print( block
             # print block.shape
             # hist, _ = np.histogram(lbp_image.ravel(), bins=np.arange(0, self.P + 3), range=[0, self.P +2])
             hist, a = np.histogram(block.ravel(), bins=np.arange(0,256), range=[0,255])
@@ -63,7 +63,7 @@ class LBPH():
         pos = 0
         for index ,hist in enumerate (hists):
             dis = cv2.compareHist(self.HIST, hist,method=cv2.HISTCMP_CHISQR) *100
-            print dis
+    
             Dis.append(dis)
             if dis < minDis:
                 minDis = dis
