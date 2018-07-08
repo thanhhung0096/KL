@@ -6,7 +6,7 @@ import time
 import os
 from lbph import LBPH
 #function
-
+from log import _info
 Names=[""]
 def detect_face(gray):
     face_cascade_path = "lbpcascade_frontalface.xml"
@@ -34,12 +34,13 @@ def predict(face,rect,gray,_hists,_labels,_Names):
     
 ##    label,confidence =reconizer.predict(face)
     (x,y,w,h) = rect
-    if confidence < 200:
+    if confidence < 75:
         print (label)
         print( "Recognition: {}, confidence: {}".format(_Names[label],confidence))
         text = "{},{}".format(_Names[label],confidence)
 ##    text = Names[label]
         draw_name(gray,text,x,y)
+        _info(_Names[label])
     else:
         print( "Unknow people!!!")
         text = "unknow"
@@ -82,8 +83,9 @@ if __name__ == "__main__":
         if face is not None:
             print( "Face Detected ")
             gray =draw_rectangle(rect,gray)
+##            t =time.time()
             predict(face,rect,gray,hists,labels,Names)
-            
+##            print ("time:", time.time() -t)
         cv2.imshow('video',gray)
         key = cv2.waitKey(1) & 0xFF
         rawCapture.truncate(0)

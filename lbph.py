@@ -13,7 +13,7 @@ class LBPH():
     def create_LBP(self):
         self.image = cv2.resize(self.image, (200, 200))
        
-        return local_binary_pattern(self.image,self.P,self.R ,method="default")
+##        return local_binary_pattern(self.image,self.P,self.R ,method="default")
 ##
         self.image = self.image.astype("float")
         r, c = self.image.shape
@@ -22,7 +22,8 @@ class LBPH():
         fun = lib.cfun
         # Here comes the fool part.
 
-        fun(ctypes.c_void_p(self.image.ctypes.data), ctypes.c_int(r), ctypes.c_int(c), ctypes.c_void_p(outdata.ctypes.data))
+        fun(ctypes.c_void_p(self.image.ctypes.data), ctypes.c_int(r), ctypes.c_int(c), ctypes.c_void_p(outdata.ctypes.data)
+            ,ctypes.c_int(self.R) )
         outdata = outdata.astype("uint8")
         return outdata
 
@@ -62,7 +63,7 @@ class LBPH():
         minDis = 1000
         pos = 0
         for index ,hist in enumerate (hists):
-            dis = cv2.compareHist(self.HIST, hist,method=cv2.HISTCMP_CHISQR) *100
+            dis = cv2.compareHist(self.HIST, hist,method=cv2.HISTCMP_BHATTACHARYYA) *100
     
             Dis.append(dis)
             if dis < minDis:
