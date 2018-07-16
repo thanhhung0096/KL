@@ -23,29 +23,41 @@ from picamera.array import PiRGBArray
 from picamera import PiCamera
 import time
 import os
+import datetime
 ##from lbph import LBPH
 ##import sys
 ##sys.path.append('/home/pi/KL')
 # Create your views here.
-
 def home(request):
-    result_log = ""
-    with open("log/log", "r+") as log_file:
-        log = log_file.read()
-        log_list = log.split("\n")
-        lastest_5_log_list = log_list[log_list.__len__() - 6:log_list.__len__() - 1]
-        print(lastest_5_log_list)
-        log_1 = lastest_5_log_list[4]
-        log_1_list = log_1.split()
-        log_2 = lastest_5_log_list[3]
-        log_2_list = log_2.split()
-        if log_1_list[7] == log_2_list[7]:
-            time1 = log_1_list[1].split(":")
-            time2 = log_2_list[1].split(":")
-            if (int(time1[1]) - int(time2[1])) > 2:
-                result_log = log_1
-    if not result_log:
-        auto_generate_blogs(result_log)
+    currTime = "00:00:00"
+    currUser = ""
+    tenLines=""
+    n = 0 
+    with open("log/log") as f:
+        lines = f.read().split("\n")
+        
+        for i in range(lines.__len__() -1 , -1,-1):
+            thisLine = lines[i]
+            user = thisLine.split(" - INFO - Recognized user:  ")[-1]
+            tg = thisLine.split(" - INFO - Recognized user:  ")[0]
+            l = tg.split(" ")[0]
+            r = tg.split(" ")[-1].split(',')[0]
+            
+            
+            if not currUser == user:
+                n = 0
+                currUser = user
+                currTime = r
+                tenLines += "\n"+thisLine
+            else:
+                n +=1
+                if n == 15:
+                    currUser = ""
+            if len(tenLines.split("\n")) > 10:
+        
+                break
+    auto_generate_blogs(tenLines)       
+        
     return render(request, 'home.html')
 
 
