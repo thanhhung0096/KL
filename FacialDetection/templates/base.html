@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load staticfiles %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'vendor/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
+    <script type="text/javascript" src="{% static 'vendor/bootstrap.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/home.js' %}"></script>
+    <title>{% block title %}{% endblock %}</title>
+
+</head>
+<body>
+<nav class="navbar navbar-dark bg-info navbar-fixed-top">
+
+    <a href="{% url 'home' %}" class="navbar-brand"><img src="{% static 'images/logo.jpg' %}"
+                                                         alt="None"></a>
+    <button class="navbar-toggler" style="float: right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav nav">
+            <li class="nav-item">
+                <a href="/" class="nav-link">Home<span class="span sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'about' %}" class="nav-link">About</a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'blogs' %}" class="nav-link">Blog</a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'streaming' %}" class="nav-link">Streaming</a>
+            </li>
+        </ul>
+
+        {% if user.is_authenticated %}
+            <div class="container-fluid" align="right">
+
+                <small>Welcome {{ user.username }}
+                </small>
+                <br>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-success btn-sm dropdown-toggle"
+                            data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                        Account
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="{% url 'new_post' %}">Create Post</a>
+                        <a class="dropdown-item" href="{% url 'own_blogs' %}">Your Posts</a>
+                        <a class="dropdown-item" href="{% url 'change_password' %}">Change Password</a>
+                        <a class="dropdown-item" href="{% url 'get_data' %}">Data</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'logout' %}">Log out</a>
+                    </div>
+                </div>
+            </div>
+
+        {% else %}
+            <div class="container-fluid" align="right">
+                <a href="{% url 'signup' %}" role="button" class="btn btn-success ">Sign up</a>
+                <a href="{% url 'login' %}" role="button" class="btn btn-primary ">Log in</a>
+            </div>
+        {% endif %}
+    </div>
+</nav>
+<div class="container mt-1">
+    {% include 'message.html' %}
+    <div class="row">
+        {% block content %}
+        {% endblock %}
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="py-1 bg-info">
+    <div class="container footer" align="center">
+        <p class="m-0 text-white text-center">Copyright &copy; Eddy1o2</p>
+    </div>
+    <!-- /.container -->
+</footer>
+
+</body>
+</html>

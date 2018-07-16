@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% load widget_tweaks %}
+
+{% block title %}
+    Create a new post
+{% endblock %}
+
+{% block content %}
+    {% load staticfiles %}
+
+    <div class="col-sm-12 mb-3 pb-3">
+        <form method="post" novalidate enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {% include 'includes/form.html' %}
+
+            <button type="submit" class="btn btn-success">Create</button>
+        </form>
+    </div>
+{% endblock %}

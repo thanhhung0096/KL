@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Streaming
+{% endblock %}
+
+{% block content %}
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'css/streaming.css' %}">
+    <div class="container label">
+        <h1 align="center">Video Streaming Django</h1>
+        <hr>
+    </div>
+    <div class="container video_stream mt-2">
+        <div class="row">
+            <div class="col-sm-4">
+                <img src="{% url 'video-feed' %}" alt="None" class="img-fluid">
+                <br>
+                <a href="{% url 'streaming' %}" class="btn btn-outline-primary btn-lg">Reload</a>
+            </div>
+            <div class="col-sm-4 my-3 context">
+                <small class="text"><strong>Create an image from camera to detect!</strong></small>
+                <br>
+                <img src="{% static 'images/load.gif' %}" alt="None" class="image_loading">
+            </div>
+            <div class="col-sm-4 image">
+                <img src="{% url 'video-feed' %}" alt="None" class="img-fluid">
+                <br>
+                <a href="{% static 'images/img_demo.jpg' %}" class="btn btn-outline-primary btn-lg">Get image</a>
+            </div>
+        </div>
+
+    </div>
+
+
+{% endblock %}

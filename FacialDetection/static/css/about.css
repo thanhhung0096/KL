@@ -1,0 +1,33 @@
+.card {
+    height: 100%;
+}
+
+.card-body {
+    height: 52%;
+}
+
+h4.card-title {
+    padding: 10px;
+}
+
+p.card-text {
+    padding: 5px;
+}
+
+a.btn.btn-primary.btn-lg {
+    margin-top: 30px;
+}
+
+h1.my-4 {
+    margin: 30px 0px 20px 0px;
+}
+
+.container.about-us {
+    margin-bottom: 50px;
+}
+
+header.jumbotron.my-4 {
+    background-image: url("/static/images/about.JPG");
+    background-size: 100% 100%;
+    color: white;
+}

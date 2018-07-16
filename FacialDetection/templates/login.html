@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container form">
+        <h1 align="center" class="mb-3">Log in</h1>
+        <form class="col-sm-6 push-sm-3" method="post" novalidate>
+            {% csrf_token %}
+            {% include 'includes/form.html' %}
+            <div class="container button" style="text-align: center">
+                <button type="submit" class="btn btn-primary btn-block mt-3">Log in</button>
+                <a href="{% url 'home' %}" role="button"
+                   class="btn btn-danger btn-block">Cancel</a>
+            </div>
+        </form>
+    </div>
+{% endblock %}

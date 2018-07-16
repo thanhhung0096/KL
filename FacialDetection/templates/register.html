@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load staticfiles %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'vendor/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/signup.css' %}">
+    <script type="text/javascript" src="{% static 'vendor/bootstrap.js' %}"></script>
+    <title>Register</title>
+</head>
+<body>
+<div class="register" align="center">
+    <h1>Sign up Your Account</h1>
+    <hr>
+    <div class="container mt-3">
+        <div class="row">
+            <div class="col-sm-4 push-sm-4">
+                <form action="." method='POST'>
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <input class="btn btn-outline-primary" type="submit" value="Register">
+                    <a href="{% url 'home' %}" role="button"
+                       class="btn btn-outline-danger cancel">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+</body>
+</html>

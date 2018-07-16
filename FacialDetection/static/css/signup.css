@@ -1,0 +1,27 @@
+h1 {
+    font-family: monospace;
+    margin-top:  30px;
+    font-weight:  bolder;
+    color: #00b4ff;
+}
+
+input#id_username {
+    margin-left: 57px;
+}
+
+input#id_email {
+    margin-left: 90px;
+}
+
+input#id_password {
+    margin-left: 59px;
+}
+
+a.btn.btn-outline-danger.cancel {
+    margin-left:  40px;
+    margin-top:  10px;
+}
+
+input.btn.btn-outline-primary {
+    margin-top:  10px;
+}
